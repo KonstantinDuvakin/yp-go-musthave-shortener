@@ -11,7 +11,16 @@ type LinksStorage struct {
 	Links map[string]string
 }
 
+func NewLinkStorage() *LinksStorage {
+	return &LinksStorage{
+		Links: make(map[string]string),
+	}
+}
+
 func (ls *LinksStorage) saveLink(key string, value string) {
+	if ls.Links == nil {
+		ls.Links = make(map[string]string)
+	}
 	ls.Links[key] = value
 }
 
@@ -22,17 +31,17 @@ func (ls *LinksStorage) GetLink(key string) string {
 	return ls.Links[key]
 }
 
-func (ls *LinksStorage) GetOrCreateLink(link []byte) string {
+func (ls *LinksStorage) GetOrCreateLink(link []byte) (string, bool) {
 	ls.mu.Lock()
 	defer ls.mu.Unlock()
 
 	for key, value := range ls.Links {
 		if value == string(link) {
-			return key
+			return key, true
 		}
 	}
 
 	key := helpers.GenerateShortLink(8)
 	ls.saveLink(key, string(link))
-	return key
+	return key, false
 }

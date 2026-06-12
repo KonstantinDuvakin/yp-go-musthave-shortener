@@ -8,9 +8,7 @@ import (
 )
 
 func main() {
-	storage := &repository.LinksStorage{
-		Links: make(map[string]string),
-	}
+	storage := repository.NewLinkStorage()
 
 	mux := http.NewServeMux()
 
