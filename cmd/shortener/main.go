@@ -5,17 +5,24 @@ import (
 
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/handler"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/repository"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
 	storage := repository.NewLinkStorage()
 
-	mux := http.NewServeMux()
+	r := chi.NewRouter()
 
-	mux.HandleFunc("GET /{id}", handler.GetShortLinkHandler(storage))
-	mux.HandleFunc("POST /", handler.CreateShortLinkHandler(storage))
+	r.MethodNotAllowed(func(rw http.ResponseWriter, r *http.Request) {
+		http.Error(rw, "Method Not Allowed", http.StatusMethodNotAllowed)
+	})
 
-	err := http.ListenAndServe(":8080", mux)
+	r.Route("/", func(r chi.Router) {
+		r.Post("/", handler.CreateShortLinkHandler(storage))
+		r.Get("/{id}", handler.GetShortLinkHandler(storage))
+	})
+
+	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		panic(err)
 	}

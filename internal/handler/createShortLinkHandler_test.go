@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/repository"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -67,14 +68,18 @@ func TestCreateShortLinkHandler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mux := http.NewServeMux()
-			mux.Handle("POST /", CreateShortLinkHandler(tt.arg))
+			r := chi.NewRouter()
+			r.MethodNotAllowed(func(rw http.ResponseWriter, r *http.Request) {
+				http.Error(rw, "Method Not Allowed", http.StatusMethodNotAllowed)
+			})
+
+			r.Post("/", CreateShortLinkHandler(tt.arg))
 
 			request := httptest.NewRequest(tt.method, "http://localhost:8080/", tt.body)
 
 			w := httptest.NewRecorder()
 
-			mux.ServeHTTP(w, request)
+			r.ServeHTTP(w, request)
 
 			res := w.Result()
 
