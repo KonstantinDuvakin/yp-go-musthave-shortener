@@ -43,23 +43,6 @@ func TestCreateShortLinkHandler(t *testing.T) {
 			},
 		},
 		{
-			name:   "CreateShortLinkHandler success repeated",
-			method: http.MethodPost,
-			body:   strings.NewReader("http://link.com"),
-			arg: &repository.LinksStorage{
-				Links: map[string]string{
-					"12345678": "http://link.com",
-				},
-			},
-			want: want{
-				code: http.StatusOK,
-				body: "http://localhost:8080/12345678",
-				headers: headers{
-					{"Content-Type", "text/plain"},
-				},
-			},
-		},
-		{
 			name:   "CreateShortLinkHandler empty body",
 			method: http.MethodPost,
 			body:   nil,

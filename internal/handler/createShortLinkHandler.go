@@ -24,14 +24,10 @@ func CreateShortLinkHandler(storage *repository.LinksStorage) http.HandlerFunc {
 			return
 		}
 
-		linkId, exist := storage.GetOrCreateLink(body)
+		linkID := storage.GetOrCreateLink(body)
 
 		rw.Header().Add("Content-Type", "text/plain")
-		if exist {
-			rw.WriteHeader(http.StatusOK)
-		} else {
-			rw.WriteHeader(http.StatusCreated)
-		}
-		rw.Write([]byte("http://" + r.Host + "/" + linkId))
+		rw.WriteHeader(http.StatusCreated)
+		rw.Write([]byte("http://" + r.Host + "/" + linkID))
 	}
 }

@@ -31,17 +31,17 @@ func (ls *LinksStorage) GetLink(key string) string {
 	return ls.Links[key]
 }
 
-func (ls *LinksStorage) GetOrCreateLink(link []byte) (string, bool) {
+func (ls *LinksStorage) GetOrCreateLink(link []byte) string {
 	ls.mu.Lock()
 	defer ls.mu.Unlock()
 
 	for key, value := range ls.Links {
 		if value == string(link) {
-			return key, true
+			return key
 		}
 	}
 
 	key := helpers.GenerateShortLink(8)
 	ls.saveLink(key, string(link))
-	return key, false
+	return key
 }
