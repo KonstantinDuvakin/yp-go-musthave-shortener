@@ -18,7 +18,7 @@ import (
 
 func main() {
 	storage := repository.NewLinkStorage()
-	c := config.CreateConfig()
+	c := config.NewConfig()
 
 	r := chi.NewRouter()
 
