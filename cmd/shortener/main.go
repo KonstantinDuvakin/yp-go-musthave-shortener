@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,13 +11,20 @@ import (
 
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/config"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/handler"
+	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/logger"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/repository"
 	"github.com/go-chi/chi/v5"
+	"go.uber.org/zap"
 )
 
 func main() {
 	storage := repository.NewLinkStorage()
 	c := config.NewConfig()
+
+	err := logger.Initialize("info")
+	if err != nil {
+		logger.Log.Warn("Failed to initialize logger", zap.Error(err))
+	}
 
 	r := chi.NewRouter()
 
@@ -27,8 +33,8 @@ func main() {
 	})
 
 	r.Route("/", func(r chi.Router) {
-		r.Post("/", handler.CreateShortLinkHandler(storage, c.BaseUrl))
-		r.Get("/{id}", handler.GetShortLinkHandler(storage))
+		r.Post("/", logger.RequestLoggerWrapper(handler.CreateShortLinkHandler(storage, c.BaseUrl)))
+		r.Get("/{id}", logger.RequestLoggerWrapper(handler.GetShortLinkHandler(storage)))
 	})
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -40,8 +46,9 @@ func main() {
 	}
 
 	go func() {
-		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("server error: %v", err)
+		logger.Log.Info("Running server", zap.String("address", c.ServerAddr))
+		if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Log.Error("server error: %v", zap.Error(err))
 		}
 	}()
 
