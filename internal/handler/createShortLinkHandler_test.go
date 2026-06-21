@@ -34,7 +34,7 @@ func TestCreateShortLinkHandler(t *testing.T) {
 		{
 			name:   "CreateShortLinkHandler success creation",
 			method: http.MethodPost,
-			host:   "http://localhost:8080",
+			host:   "http://localhost:8080/",
 			body:   strings.NewReader("http://link.com"),
 			arg:    &repository.LinksStorage{},
 			want: want{
@@ -48,7 +48,7 @@ func TestCreateShortLinkHandler(t *testing.T) {
 		{
 			name:   "CreateShortLinkHandler empty body",
 			method: http.MethodPost,
-			host:   "http://localhost:8080",
+			host:   "http://localhost:8080/",
 			body:   nil,
 			arg:    &repository.LinksStorage{},
 			want: want{
@@ -60,7 +60,7 @@ func TestCreateShortLinkHandler(t *testing.T) {
 		{
 			name:   "CreateShortLinkHandler not allowed method",
 			method: http.MethodGet,
-			host:   "http://localhost:8080",
+			host:   "http://localhost:8080/",
 			body:   nil,
 			arg:    &repository.LinksStorage{},
 			want: want{
