@@ -21,7 +21,7 @@ func main() {
 	storage := repository.NewLinkStorage()
 	c := config.NewConfig()
 
-	err := logger.Initialize("info")
+	err := logger.Initialize(c.LogLevel)
 	if err != nil {
 		logger.Log.Warn("Failed to initialize logger", zap.Error(err))
 	}
@@ -35,6 +35,7 @@ func main() {
 	r.Route("/", func(r chi.Router) {
 		r.Post("/", logger.RequestLoggerWrapper(handler.CreateShortLinkHandler(storage, c.BaseUrl)))
 		r.Get("/{id}", logger.RequestLoggerWrapper(handler.GetShortLinkHandler(storage)))
+		r.Post("/api/shorten", logger.RequestLoggerWrapper(handler.CreateShortLinkByJson(storage, c.BaseUrl)))
 	})
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -48,7 +49,7 @@ func main() {
 	go func() {
 		logger.Log.Info("Running server", zap.String("address", c.ServerAddr))
 		if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Log.Error("server error: %v", zap.Error(err))
+			logger.Log.Error("server error: ", zap.Error(err))
 		}
 	}()
 

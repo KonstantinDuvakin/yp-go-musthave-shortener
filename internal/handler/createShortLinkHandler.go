@@ -7,7 +7,7 @@ import (
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/repository"
 )
 
-func CreateShortLinkHandler(storage *repository.LinksStorage, host string) http.HandlerFunc {
+func CreateShortLinkHandler(s *repository.LinksStorage, host string) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		body, err := io.ReadAll(r.Body)
@@ -24,10 +24,10 @@ func CreateShortLinkHandler(storage *repository.LinksStorage, host string) http.
 			return
 		}
 
-		linkID := storage.GetOrCreateLink(body)
+		linkID := s.GetOrCreateLink(body)
 
 		rw.Header().Add("Content-Type", "text/plain")
 		rw.WriteHeader(http.StatusCreated)
-		rw.Write([]byte(host + "/" + linkID))
+		rw.Write([]byte(host + linkID))
 	}
 }

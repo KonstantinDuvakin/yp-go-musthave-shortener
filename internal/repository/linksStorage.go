@@ -7,13 +7,15 @@ import (
 )
 
 type LinksStorage struct {
-	mu    sync.RWMutex
-	Links map[string]string
+	mu            sync.RWMutex
+	Links         map[string]string
+	RevertedLinks map[string]string
 }
 
 func NewLinkStorage() *LinksStorage {
 	return &LinksStorage{
-		Links: make(map[string]string),
+		Links:         make(map[string]string),
+		RevertedLinks: make(map[string]string),
 	}
 }
 
@@ -21,7 +23,12 @@ func (ls *LinksStorage) saveLink(key string, value string) {
 	if ls.Links == nil {
 		ls.Links = make(map[string]string)
 	}
+
+	if ls.RevertedLinks == nil {
+		ls.RevertedLinks = make(map[string]string)
+	}
 	ls.Links[key] = value
+	ls.RevertedLinks[value] = key
 }
 
 func (ls *LinksStorage) GetLink(key string) string {
@@ -35,13 +42,12 @@ func (ls *LinksStorage) GetOrCreateLink(link []byte) string {
 	ls.mu.Lock()
 	defer ls.mu.Unlock()
 
-	for key, value := range ls.Links {
-		if value == string(link) {
-			return key
-		}
+	key, ok := ls.RevertedLinks[string(link)]
+	if ok {
+		return key
 	}
 
-	key := helpers.GenerateShortLink(8)
+	key = helpers.GenerateShortLink(8)
 	ls.saveLink(key, string(link))
 	return key
 }

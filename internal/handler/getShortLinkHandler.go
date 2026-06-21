@@ -7,10 +7,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func GetShortLinkHandler(storage *repository.LinksStorage) http.HandlerFunc {
+func GetShortLinkHandler(s *repository.LinksStorage) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		linkId := chi.URLParam(r, "id")
-		link := storage.GetLink(linkId)
+		link := s.GetLink(linkId)
 		if link == "" {
 			rw.WriteHeader(http.StatusNotFound)
 			rw.Write([]byte("Not Found"))

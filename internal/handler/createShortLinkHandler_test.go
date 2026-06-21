@@ -65,7 +65,7 @@ func TestCreateShortLinkHandler(t *testing.T) {
 			arg:    &repository.LinksStorage{},
 			want: want{
 				code:    http.StatusMethodNotAllowed,
-				body:    "Method Not Allowed\n",
+				body:    http.StatusText(http.StatusMethodNotAllowed),
 				headers: headers{},
 			},
 		},

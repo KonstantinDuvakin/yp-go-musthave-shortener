@@ -61,7 +61,8 @@ const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 func TestLinksStorage_GetOrCreateLink(t *testing.T) {
 	type fields struct {
-		Links map[string]string
+		Links         map[string]string
+		RevertedLinks map[string]string
 	}
 
 	tests := []struct {
@@ -77,6 +78,9 @@ func TestLinksStorage_GetOrCreateLink(t *testing.T) {
 				Links: map[string]string{
 					"key": "value",
 				},
+				RevertedLinks: map[string]string{
+					"value": "key",
+				},
 			},
 			arg:   []byte("value"),
 			exist: true,
@@ -85,7 +89,8 @@ func TestLinksStorage_GetOrCreateLink(t *testing.T) {
 		{
 			name: "Create link",
 			fields: fields{
-				Links: nil,
+				Links:         nil,
+				RevertedLinks: nil,
 			},
 			arg:   []byte("value"),
 			exist: false,
@@ -96,6 +101,9 @@ func TestLinksStorage_GetOrCreateLink(t *testing.T) {
 				Links: map[string]string{
 					"key": "value",
 				},
+				RevertedLinks: map[string]string{
+					"value": "key",
+				},
 			},
 			arg:   []byte("value1"),
 			exist: false,
@@ -105,7 +113,8 @@ func TestLinksStorage_GetOrCreateLink(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ls := &LinksStorage{
-				Links: tt.fields.Links,
+				Links:         tt.fields.Links,
+				RevertedLinks: tt.fields.RevertedLinks,
 			}
 
 			mapLenBefore := len(ls.Links)
