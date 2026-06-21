@@ -15,7 +15,7 @@ func NewConfig() *Config {
 	config := &Config{}
 
 	flag.StringVar(&config.ServerAddr, "a", "localhost:8080", "The address to listen on for HTTP requests.")
-	flag.StringVar(&config.BaseUrl, "b", "http://localhost:8080/", "The base url for short links.")
+	flag.StringVar(&config.BaseUrl, "b", "http://localhost:8080", "The base url for short links.")
 	flag.StringVar(&config.LogLevel, "l", "info", "log level")
 
 	flag.Parse()

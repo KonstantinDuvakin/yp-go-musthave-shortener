@@ -41,7 +41,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 					Links:         make(map[string]string),
 					RevertedLinks: make(map[string]string),
 				},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			method: http.MethodPost,
 			body:   strings.NewReader(`{"url":"http://example.com"}`),
@@ -59,7 +59,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 			body:   nil,
 			args: args{
 				s:       &repository.LinksStorage{},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			want: want{
 				code:    http.StatusBadRequest,
@@ -76,7 +76,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 					Links:         make(map[string]string),
 					RevertedLinks: make(map[string]string),
 				},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			want: want{
 				code:    http.StatusBadRequest,
@@ -93,7 +93,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 					Links:         make(map[string]string),
 					RevertedLinks: make(map[string]string),
 				},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			want: want{
 				code:    http.StatusBadRequest,
@@ -110,7 +110,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 					Links:         make(map[string]string),
 					RevertedLinks: make(map[string]string),
 				},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			want: want{
 				code:    http.StatusBadRequest,
@@ -127,7 +127,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 					Links:         make(map[string]string),
 					RevertedLinks: make(map[string]string),
 				},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			want: want{
 				code: http.StatusCreated,
@@ -143,7 +143,7 @@ func TestCreateShortLinkByJson(t *testing.T) {
 			body:   nil,
 			args: args{
 				s:       &repository.LinksStorage{},
-				baseUrl: "http://localhost:8080/",
+				baseUrl: "http://localhost:8080",
 			},
 			want: want{
 				code:    http.StatusMethodNotAllowed,

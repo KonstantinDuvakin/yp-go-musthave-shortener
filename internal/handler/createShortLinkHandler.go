@@ -28,6 +28,6 @@ func CreateShortLinkHandler(s *repository.LinksStorage, host string) http.Handle
 
 		rw.Header().Add("Content-Type", "text/plain")
 		rw.WriteHeader(http.StatusCreated)
-		rw.Write([]byte(host + linkID))
+		rw.Write([]byte(host + "/" + linkID))
 	}
 }

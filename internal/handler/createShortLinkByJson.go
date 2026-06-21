@@ -32,7 +32,7 @@ func CreateShortLinkByJson(s *repository.LinksStorage, baseUrl string) http.Hand
 		linkId := s.GetOrCreateLink([]byte(req.Url))
 
 		res := model.GetLinkShortenRes{
-			Result: baseUrl + linkId,
+			Result: baseUrl + "/" + linkId,
 		}
 
 		rw.Header().Set("Content-Type", "application/json")
