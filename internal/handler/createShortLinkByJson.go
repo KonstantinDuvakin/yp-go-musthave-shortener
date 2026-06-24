@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/logger"
+	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/middlewares/logger"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/model"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/repository"
 	"go.uber.org/zap"

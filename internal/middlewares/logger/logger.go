@@ -50,8 +50,8 @@ func (lrw *loggingResponseWriter) WriteHeader(statusCode int) {
 	lrw.responseData.status = statusCode
 }
 
-func RequestLoggerWrapper(h http.HandlerFunc) http.HandlerFunc {
-	logFn := func(w http.ResponseWriter, r *http.Request) {
+func RequestLoggerWrapper(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
 		responseData := &responseData{
@@ -77,7 +77,5 @@ func RequestLoggerWrapper(h http.HandlerFunc) http.HandlerFunc {
 			zap.Int("statusCode", responseData.status),
 			zap.Int("size", responseData.size),
 		)
-	}
-
-	return logFn
+	})
 }

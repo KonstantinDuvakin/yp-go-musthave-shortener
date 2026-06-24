@@ -11,7 +11,8 @@ import (
 
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/config"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/handler"
-	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/logger"
+	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/middlewares/gzip"
+	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/middlewares/logger"
 	"github.com/KonstantinDuvakin/yp-go-musthave-shortener/internal/repository"
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
@@ -33,9 +34,12 @@ func main() {
 	})
 
 	r.Route("/", func(r chi.Router) {
-		r.Post("/", logger.RequestLoggerWrapper(handler.CreateShortLinkHandler(storage, c.BaseUrl)))
-		r.Get("/{id}", logger.RequestLoggerWrapper(handler.GetShortLinkHandler(storage)))
-		r.Post("/api/shorten", logger.RequestLoggerWrapper(handler.CreateShortLinkByJson(storage, c.BaseUrl)))
+		r.Use(logger.RequestLoggerWrapper)
+		r.Use(gzip.Middleware)
+
+		r.Post("/", handler.CreateShortLinkHandler(storage, c.BaseUrl))
+		r.Get("/{id}", handler.GetShortLinkHandler(storage))
+		r.Post("/api/shorten", handler.CreateShortLinkByJson(storage, c.BaseUrl))
 	})
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
