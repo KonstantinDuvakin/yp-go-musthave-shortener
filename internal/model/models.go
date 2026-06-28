@@ -7,3 +7,9 @@ type GetLinkShortenReq struct {
 type GetLinkShortenRes struct {
 	Result string `json:"result"`
 }
+
+type Link struct {
+	Id          string `json:"uuid"`
+	ShortUrl    string `json:"short_url"`
+	OriginalUrl string `json:"original_url"`
+}

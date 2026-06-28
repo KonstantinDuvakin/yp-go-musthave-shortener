@@ -19,12 +19,17 @@ import (
 )
 
 func main() {
-	storage := repository.NewLinkStorage()
 	c := config.NewConfig()
+
+	storage := repository.NewLinkStorage(c.FileStoragePath)
 
 	err := logger.Initialize(c.LogLevel)
 	if err != nil {
 		logger.Log.Warn("Failed to initialize logger", zap.Error(err))
+	}
+
+	if err = storage.RestoreLinkFromFile(); err != nil {
+		logger.Log.Warn("Failed to restore link from file", zap.Error(err))
 	}
 
 	r := chi.NewRouter()

@@ -6,9 +6,10 @@ import (
 )
 
 type Config struct {
-	BaseUrl    string
-	ServerAddr string
-	LogLevel   string
+	BaseUrl         string
+	ServerAddr      string
+	LogLevel        string
+	FileStoragePath string
 }
 
 func NewConfig() *Config {
@@ -16,7 +17,8 @@ func NewConfig() *Config {
 
 	flag.StringVar(&config.ServerAddr, "a", "localhost:8080", "The address to listen on for HTTP requests.")
 	flag.StringVar(&config.BaseUrl, "b", "http://localhost:8080", "The base url for short links.")
-	flag.StringVar(&config.LogLevel, "l", "info", "log level")
+	flag.StringVar(&config.LogLevel, "l", "info", "Log level")
+	flag.StringVar(&config.FileStoragePath, "f", "short_links_log.txt", "Path to the file")
 
 	flag.Parse()
 
@@ -30,6 +32,10 @@ func NewConfig() *Config {
 
 	if envLogLevel := os.Getenv("LOG_LEVEL"); envLogLevel != "" {
 		config.LogLevel = envLogLevel
+	}
+
+	if envFileStoragePath := os.Getenv("FILE_STORAGE_PATH"); envFileStoragePath != "" {
+		config.FileStoragePath = envFileStoragePath
 	}
 
 	return config

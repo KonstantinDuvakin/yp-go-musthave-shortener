@@ -45,6 +45,7 @@ func TestGzipCompression(t *testing.T) {
 		r.Header.Set("Accept-Encoding", "")
 
 		resp, err := http.DefaultClient.Do(r)
+
 		require.NoError(t, err)
 		require.Equal(t, http.StatusCreated, resp.StatusCode)
 
